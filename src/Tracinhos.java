@@ -1,57 +1,105 @@
+import java.security.spec.ECFieldF2m;
+
 public class Tracinhos implements Cloneable
 {
     private char texto [];
 
     public Tracinhos (int qtd) throws Exception
     {
-		// verifica se qtd n„o È positiva, lanÁando uma exceÁ„o.
-		// instancia this.texto com um vetor com tamanho igual qtd.
-		// preenche this.texto com underlines (_).
+        if(qtd < 0)
+            throw new Exception("A quantidade n√£o √© positiva");
+
+        this.texto = new char[qtd]; // instancia this.texto com um vetor com tamanho igual qtd
+
+        for(int i = 0; i < qtd; i++)  // for para preencher o texto com underlines
+            this.texto[i] = '_';
     }
 
     public void revele (int posicao, char letra) throws Exception
     {
-		// verifica se posicao È negativa ou ent„o igual ou maior
-		// do que this.texto.length, lanÁando uma exceÁ„o.
-		// armazena a letra fornecida na posicao tambem fornecida
-		// do vetor this.texto
+        if(posicao < 0 && posicao >= this.texto.length)  // faz a valida√ß√£o necess√°ria
+            throw new Exception("Posi√ß√£o inv√°lida!");
+        
+        this.texto[posicao] = letra;    // armazena a letra fornecida na posi√ß√£o tamb√©m fornecida
     }
 
     public boolean isAindaComTracinhos ()
     {
-        // percorre o vetor de char this.texto e verifica
-        // se o mesmo ainda contem algum underline ou se ja
-        // foram todos substituidos por letras; retornar true
-        // caso ainda reste algum underline, ou false caso
-        // contrario
+        int qtd = this.texto.length;
+
+        for(int i = 0; i < qtd; i++)  // percorre o texto e verifica se h√° underlines
+        {
+            if(this.texto[i] == '_')    // se achar um underline na posi√ß√£o i, retorna true
+                return true;
+        }
+
+        return false;    // retorna false caso n√£o tenha encontrado underlines no for acima
     }
 
     public String toString ()
     {
-        // retorna um String com TODOS os caracteres que h·
-        // no vetor this.texto, intercalados com espaÁos em
-        // branco
+        StringBuilder fazString = new StringBuilder();  // classe que tem um m√©todo que constr√≥i strings
+        int qtd = this.texto.length;  // tamanho do vetor de texto
+
+        for(int i = 0; i < qtd; i++)   // percorrer o vetor de texto
+        {
+            fazString.append(this.texto[i]);     // adicionando os caracteres a string
+
+            if(i < qtd - 1)                      // adiciona espa√ßo ap√≥s cada caractere, exceto o √∫ltimo
+                fazString.append(" "); 
+        }
+
+        return fazString.toString();    // retorna a nova string
     }
 
     public boolean equals (Object obj)
     {
-        // verificar se this e obj possuem o mesmo conte˙do, retornando
-        // true no caso afirmativo ou false no caso negativo
+        if(obj == this) return true;
+        if(obj == null) return false;
+        if(obj.getClass() != this.getClass()) return false;
+
+        Tracinhos t = (Tracinhos)obj;
+
+        if(this.texto.length != t.texto.length) return false;  // se n√£o possuem o mesmo tamanho, retorna false
+        
+        for (int i = 0; i < this.texto.length; i++)    // percorre o vetor
+        {
+            if(this.texto[i] != t.texto[i]) return false;    // compara os valores do index i, se forem distintos retorna false
+        }
+
+        return true;   // depois de todas as valida√ß√µes, retorna true
     }
 
     public int hashCode ()
     {
-        // calcular e retornar o hashcode de this
+        int ret = 1;
+
+        for (int i = 0; i < this.texto.length; i++)  // calcula um hashcode novo para cada elemento do vetor
+            ret = ret * 11 + Character.hashCode(this.texto[i]);
+        
+        if(ret < 0) ret = -ret;
+        return ret;
     }
 
-    public Tracinhos (Tracinhos t) throws Exception // construtor de cÛpia
+    public Tracinhos (Tracinhos t) throws Exception // construtor de c√≥pia
     {
-        // intanciar this.texto um vetor com o mesmo tamanho de t.texto
-        // e copilar o conte˙do de t.texto para this.texto
+        if (t == null)
+            throw new Exception("Modelo ausente");
+        
+        this.texto = new char [t.texto.length];  // instancia this.texto um vetor de mesmo tamanho de t.texto
+        
+        System.arraycopy(t.texto, 0, this.texto, 0, t.texto.length);  // m√©todo que copia o conte√∫do do vetor t para o this.texto
     }
 
     public Object clone ()
     {
-        // retornar uma copia de this
+        Tracinhos ret = null;
+        try
+        {
+            ret = new Tracinhos(this);
+        }
+        catch(Exception erro)
+        {}
+        return ret;
     }
 }

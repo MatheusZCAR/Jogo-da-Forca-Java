@@ -1,31 +1,50 @@
+import java.security.spec.ECFieldF2m;
+
 public class Palavra implements Comparable<Palavra>
 {
     private String texto;
 
     public Palavra (String texto) throws Exception
     {
-		// verifica se o texto recebido é nulo ou então vazio,
-		// ou seja, sem nenhum caractere, lançando exceção.
-		// armazena o texto recebido em this.texto.
+		if (texto == null || texto == "")
+            throw new Exception("Texto vazio");
+        
+        texto.trim();   // remove espaÃ§os entre a string
+        this.texto = texto.toUpperCase();   // coloca a string em maiÃºsculo
     }
 
     public int getQuantidade (char letra)
     {
-        // percorre o String this.texto, conta e retorna
-        // quantas letras existem nele iguais a letra fornecida
+        int n = this.texto.length();  // obtÃ©m o tamanho da string
+        int ret = 0;     // contador de quantidade de letras
+        
+        for(int i = 0; i < n; i++)
+        {
+            if(this.texto.charAt(i) == letra)   // charAt retorna a letra na posiÃ§Ã£o i
+                ret++;
+        }
+        return ret;
     }
 
     public int getPosicaoDaIezimaOcorrencia (int i, char letra) throws Exception
     {
-        // se i==0, retorna a posicao em que ocorre a primeira
-        // aparicao de letra fornecida em this.texto;
-        // se i==1, retorna a posicao em que ocorre a segunda
-        // aparicao de letra fornecida em this.texto;
-        // se i==2, retorna a posicao em que ocorre a terceira
-        // aparicao de letra fornecida em this.texto;
-        // e assim por diante.
-        // lançar excecao caso nao encontre em this.texto
-        // a Iézima aparição da letra fornecida.
+        int ret = -1;  // valor de erro
+        
+        if(i < 0)
+            throw new Exception("O valor de i nÃ£o pode ser negativo!");
+        
+        if (this.texto.indexOf(letra) == -1)  // verifica se a letra existe na string
+            throw new Exception("A palavra nÃ£o possui a letra " + letra);
+        
+        for(int j = 0; j <= i; j++)  // loop para encontrar a ocorrÃªncia
+        {
+            // para a primeira ocorrÃªncia ou qualquer subsequente
+            ret = this.texto.indexOf(letra, ret + 1);  // a busca comeÃ§a depois da Ãºltima posiÃ§Ã£o encontrada
+
+            if (ret == -1)
+                throw new Exception("A palavra nÃ£o possui " + (i + 1) + "ocorrÃªncias da letra" + letra);
+        }
+        return ret;
     }
 
     public int getTamanho ()
@@ -40,13 +59,27 @@ public class Palavra implements Comparable<Palavra>
 
     public boolean equals (Object obj)
     {
-        // verificar se this e obj possuem o mesmo conteúdo, retornando
-        // true no caso afirmativo ou false no caso negativo
+        if(obj == this) return true;
+        if(obj == null) return false;
+        if(obj.getClass() != this.getClass()) return false;
+
+        Palavra p = (Palavra)obj;
+        int comparacao = this.texto.compareTo(p.texto);
+
+        if(comparacao == 0)
+            return true;
+        else
+            return false;
     }
 
     public int hashCode ()
     {
-        // calcular e retornar o hashcode de this
+        int ret = 1;
+        if(this.texto != null)
+            ret = ret * 7 + this.texto.hashCode();
+        
+        if(ret < 0) ret = -ret;
+        return ret;
     }
 
     public int compareTo (Palavra palavra)

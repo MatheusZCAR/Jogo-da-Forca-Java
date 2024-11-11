@@ -4,49 +4,88 @@ public class ControladorDeLetrasJaDigitadas implements Cloneable
 
     public ControladorDeLetrasJaDigitadas ()
     {
-        // torna this.letrasJaDigitadas igual ao String vazio
+        this.letrasJaDigitadas = "";  // inicializa letras digitadas como uma string vazia
     }
 
     public boolean isJaDigitada (char letra)
     {
-        // percorrer o String this.letrasJaDigitadas e verificar se ele
-        // possui a letra fornecida, retornando true em caso afirmativo
-        // ou false em caso negativo
+        if(this.letrasJaDigitadas.indexOf(letra) == -1) // se retornar -1, significa que a letra n√£o est√° na string
+            return false;
+        else
+            return true;
     }
 
     public void registre (char letra) throws Exception
     {
-		// verifica se a letra fornecida ja foi digitada (pode usar
-		// o mÈtodo this.isJaDigitada, para isso), lancando uma exceÁ„o
-		// em caso afirmativo.
-		// concatena a letra fornecida a this.letrasJaDigitadas.
+        if(this.isJaDigitada(letra))  // verifica se a letra j√° foi digitada, em caso positivo forne√ßa uma exce√ß√£o
+            throw new Exception("A letra j√° foi digitada!");
+        
+        this.letrasJaDigitadas += letra;  // concatena a letra
     }
 
     public String toString ()
     {
-		// retorna um String com TODAS as letras presentes em
-		// this.letrasJaDigitadas separadas por vÌrgula (,).
+		if (this.letrasJaDigitadas.isEmpty()) // se n√£o tiver nenhuma letra registrada, retorna a string vazia
+            return "";
+        
+        StringBuilder fazString = new StringBuilder(); // classe que tem um m√©todo que manipula strings
+
+        for(int i = 0; i < this.letrasJaDigitadas.length(); i++)
+        {
+            fazString.append(this.letrasJaDigitadas.charAt(i));  // obt√©m os caracteres da string
+
+            if (i < this.letrasJaDigitadas.length() - 1)   // se n√£o for a √∫ltima letra, adiciona uma v√≠rgula
+                fazString.append(", ");
+        }
+        
+        return fazString.toString();  // retorna a nova string com as letras separadas por v√≠rgula
     }
 
     public boolean equals (Object obj)
     {
-        // verificar se this e obj s„o iguais
+        if(obj == this) return true;
+        if(obj == null) return false;
+        if(obj.getClass() != this.getClass()) return false;
+
+        ControladorDeLetrasJaDigitadas c = (ControladorDeLetrasJaDigitadas)obj;
+        
+        int comparacao = this.letrasJaDigitadas.compareTo(c.letrasJaDigitadas);
+
+        if(comparacao == 0)
+            return true;
+        else
+            return false;
     }
 
     public int hashCode ()
     {
-        // calcular e retornar o hashcode de this
+       int ret = 1;
+       if(this.letrasJaDigitadas != null)
+            ret = ret * 7 + this.letrasJaDigitadas.hashCode();
+    
+       if(ret < 0) ret = -ret;
+       
+       return ret;
     }
 
     public ControladorDeLetrasJaDigitadas(
     ControladorDeLetrasJaDigitadas controladorDeLetrasJaDigitadas)
-    throws Exception // construtor de cÛpia
+    throws Exception // construtor de c√≥pia
     {
-        // copiar c.letrasJaDigitadas em this.letrasJaDigitadas
+        if(controladorDeLetrasJaDigitadas == null) throw new Exception("Modelo ausente");
+        
+        this.letrasJaDigitadas = controladorDeLetrasJaDigitadas.letrasJaDigitadas;
     }
 
     public Object clone ()
     {
-        // criar uma cÛpia do this com o construtor de cÛpia e retornar
+        ControladorDeLetrasJaDigitadas ret = null;
+        try
+        {
+            ret = new ControladorDeLetrasJaDigitadas(this);
+        }
+        catch(Exception erro)
+        {}
+        return ret;
     }
 }
